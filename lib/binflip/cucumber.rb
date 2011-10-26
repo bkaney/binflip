@@ -7,12 +7,12 @@ module Binflip
       # Toggle bin
       Binflip.module_eval <<-RUBY
         def self.current_bin
-          return '#{kanban_bin}'
+          return '#{current_bin}'
         end
       RUBY
 
       # Toggle RAILS_ENV
-      RAILS["ENV"] = current_bin
+      ENV["RAILS_ENV"] = current_bin
 
       # Reload routes
       reload_routes_if_new_bin(scenario)
@@ -35,4 +35,19 @@ module Binflip
     end
 
   end
+end
+
+Before do |scenario|
+  tags = Binflip::Cucumber.current_tags(scenario)
+
+  if tags.size <= 1
+    bin = tags.first.try(:gsub, '@', '')
+    bin = bin.nil? ? Binflip::DEPLOYED_BIN : bin
+    Binflip::Cucumber.toggle_bin!(bin, scenario)
+  end
+
+end
+
+After do |scenario|
+  $tags = Binflip::Cucumber.current_tags(scenario)
 end
