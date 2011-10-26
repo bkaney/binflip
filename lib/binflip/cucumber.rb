@@ -12,7 +12,7 @@ module Binflip
       RUBY
 
       # Toggle RAILS_ENV
-      ENV["RAILS_ENV"] = current_bin
+      ENV["RAILS_ENV"] = "cucumber_#{current_bin}"
 
       # Reload routes
       reload_routes_if_new_bin(scenario)
