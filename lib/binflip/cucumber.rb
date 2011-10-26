@@ -12,7 +12,10 @@ module Binflip
       RUBY
 
       # Toggle RAILS_ENV
-      ENV["RAILS_ENV"] = "cucumber_#{current_bin}"
+      ENV["RAILS_ENV"] = Rails.env = "cucumber_#{current_bin}"
+      ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+      ActiveRecord::Base.establish_connection
+
 
       # Reload routes
       reload_routes_if_new_bin(scenario)
