@@ -10,7 +10,7 @@
 
 module Binflip
 
-  BINS = %w(devopment approval sqa production)
+  BINS = %w(development approval sqa production)
   DEPLOYED_BIN = 'production'
 
   class FeatureUnknown < Exception; end;
