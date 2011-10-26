@@ -1,8 +1,19 @@
+require 'binflip'
+
 namespace :db do
   namespace :test do
     task :prepare_with_kanban do
-      BinFlip::BINS.each do |bin|
-        ENV['RAILS_ENV'] = Rails.env = bin
+      Binflip::BINS.each do |bin|
+        # Toggle bin
+
+        ENV['RAILS_ENV'] = Rails.env = "cucumber_#{bin}"
+        puts "=== prepare for #{Rails.env}"
+        
+        Binflip.module_eval <<-RUBY
+          def self.current_bin
+            return '#{bin}'
+          end
+        RUBY
 
         Rake::Task['db:drop'].execute
         Rake::Task['db:create'].execute
