@@ -1,11 +1,11 @@
 require 'binflip'
 
-module BinFlip
+module Binflip
   module Cucumber
     
     def self.toggle_bin!(current_bin, scenario)
       # Toggle bin
-      BinFlip.module_eval <<-RUBY
+      Binflip.module_eval <<-RUBY
         def self.current_bin
           return '#{kanban_bin}'
         end
