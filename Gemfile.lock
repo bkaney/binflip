@@ -15,6 +15,7 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.7)
       slop (>= 2.4.4, < 3)
+    rake (0.9.2.2)
     redis (2.2.2)
     rollout (1.1.0)
     slop (2.4.4)
@@ -26,5 +27,6 @@ DEPENDENCIES
   binflip!
   mocha
   pry
+  rake
   redis
   rollout
