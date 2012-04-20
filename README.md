@@ -12,7 +12,7 @@ Keeping true to twelve-factor application principles <http://12factor.net>, this
 Rollout Compatibility
 ======================
 
-If Rollout <https://github.com/jamesgolick/rollout> is present, it will delegate all methods, adding to `active?` a preliminary test to see if the environment toggle is on before checking rollout.
+If Rollout <https://github.com/jamesgolick/rollout> is present, it will pass through most rollout methods except `active?`, where a preliminary test is done to see if the environment toggle is active first.
 
 Rationale
 =========
