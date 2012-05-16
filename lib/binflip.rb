@@ -2,6 +2,13 @@ require 'delegate'
 
 class Binflip
 
+  if defined?(Rails) && defined?(Rails::Engine)
+    class Engine < ::Rails::Engine
+      require 'binflip/engine'
+    end
+  end
+
+
   def self.rollout?
     defined?(Rollout) == 'constant'
   end
