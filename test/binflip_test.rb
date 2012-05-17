@@ -34,7 +34,7 @@ describe Binflip do
 
     describe "with Rollout" do
       before do
-        Binflip.expects(:rollout?).returns(true)
+        Binflip.stubs(:rollout?).returns(true)
         Redis.new.flushdb
 
         @redis = Redis.new
@@ -53,6 +53,7 @@ describe Binflip do
       end
 
       it "must be false if the environment is false" do
+        binding.pry
         @binflip.activate_user(:x, stub(:id => 51))
         @binflip.active?(:y, stub(:id => 51)).must_equal false
       end
