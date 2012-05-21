@@ -4,6 +4,13 @@ if defined?(Rails) && defined?(Rails::Engine)
   require 'binflip_rails'
 end
 
+class FauxRedis
+  def smembers(*_); []; end
+  def sadd(*_); true; end
+  def srem(*_); true; end
+  def del(*_); 0; end
+end
+
 class Binflip
   @rollout = false
 
@@ -18,7 +25,11 @@ class Binflip
   end
   
   def redis
-    @redis ||= @rollout.instance_variable_get(:@redis) if rollout?
+    @redis ||= if rollout?
+      @rollout.instance_variable_get(:@redis)
+    else
+      FauxRedis.new 
+    end
   end
 
   def active?(feature, user=nil)
@@ -77,17 +88,16 @@ class Binflip
     ENV[environment_key(feature)] == '1'
   end
 
-  
   def feature_set_purge
-    redis.del(feature_set_key) if rollout?
+    redis.del(feature_set_key)
   end
 
   def feature_set_del(feature)
-    redis.srem(feature_set_key, feature) if rollout?
+    redis.srem(feature_set_key, feature)
   end
 
   def feature_set_add(feature)
-    redis.sadd(feature_set_key, feature) if rollout?
+    redis.sadd(feature_set_key, feature)
   end
 
   def feature_set_key
@@ -97,7 +107,7 @@ class Binflip
 
   # Set of all feature keys
   def features
-    features_rollout + features_environment
+    features_environment + features_rollout
   end
   
   def features_rollout
