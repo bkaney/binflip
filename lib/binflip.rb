@@ -77,7 +77,7 @@ class Binflip
   private
 
   def environment_key_pattern
-    /^FEATURE_/
+    /^FEATURE_(.*)$/
   end
 
   def environment_key(feature)
@@ -115,6 +115,10 @@ class Binflip
   end
 
   def features_environment
-    ENV.keys.select{|k| k =~ environment_key_pattern}.to_set
+    ENV.keys.reduce([]) do |a,k| 
+      if (k =~ environment_key_pattern)
+        a << $1
+      end
+    end.to_set
   end
 end
