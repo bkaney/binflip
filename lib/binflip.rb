@@ -115,10 +115,10 @@ class Binflip
   end
 
   def features_environment
-    ENV.keys.reduce([]) do |a,k| 
-      if (k =~ environment_key_pattern)
-        a << $1
-      end
-    end.to_set
+    ENV.keys.reduce(Set.new) do |s,k|
+      s << $1 if (k =~ environment_key_pattern)
+      s
+    end
   end
+
 end
