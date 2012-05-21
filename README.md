@@ -67,7 +67,7 @@ NOTE: Absence of feature toggle env variable means the feature is not active.
 binflip.js
 =========
 
-To use binflip.js, you need to include `vendor/assets/javascripts/binflip.js`, and have a dollar-operator available.  If you are using Rails 3.1 or higher, including the Binflip gem will make it available, just require 'binflip' in your application.js manifest.
+To use binflip.js, you need to include `vendor/assets/javascripts/binflip.js`, and have `JSON.parse` available (use https://github.com/douglascrockford/JSON-js/blob/master/json2.js if you are using an old browser).  If you are using Rails 3.1 or higher, including the Binflip gem will make it available, just require 'binflip' in your application.js manifest.
 
 The javascript pattern is to build the feature set (for the current user) once during page load, and store the set of features as a data attribute in the `<body>` tag.
 
@@ -108,13 +108,13 @@ If Rollout is present, Binflip delegates all methods to it (such as `activate_us
 Environment Keys and Case Sensitivity
 =====================================
 
-As it is customary to set ENVIRONMENT_VARS in all upcase, environment feature keys are upcase'd.  So you *must* set your env keys to all upcase -- e.g. FEATURE_MY_COOL_FEATURE.  But you can test with upcase, lowercase or as a symbol:
+As it is customary to set `ENVIRONMENT_VARS` in all upcase, environment feature keys are upcase'd.  So you *must* set your env keys to all upcase -- e.g. `FEATURE_MY_COOL_FEATURE`.  But you can test with upcase, lowercase or as a symbol:
 
     $binflip.active?(:my_cool_feature)
     $binflip.active?('my_cool_feature')
     $binflip.active?('MY_COOL_FEATURE')
 
-These are all equivalent and will test for FEATURE_MY_COOL_FEATURE in the ENV hash.  NOTE: this convention is only for ENV, if you are using rollout, your mileage could vary.
+These are all equivalent and will test for `FEATURE_MY_COOL_FEATURE` in the `ENV` hash.  NOTE: this convention is only for `ENV` and not for rollout.
 
 
 License
