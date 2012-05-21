@@ -64,6 +64,23 @@ Check for toggles, using just the [name]:
 
 NOTE: Absence of feature toggle env variable means the feature is not active.
 
+binflip.js
+=========
+
+To use binflip.js, you need to include `vendor/assets/javascripts/binflip.js`, and have a dollar-operator available.  If you are using Rails 3.1 or higher, including the Binflip gem will make it available, just require 'binflip' in your application.js manifest.
+
+The javascript pattern is to build the feature set (for the current user) once during pageload, and store the set of features as a data attribute in the `<body>` tag.
+
+So in your `<body>` tag, do something like this:
+
+    <body data-features='<%= $binflip.active_features(current_user).to_json %>'>
+
+Then you can test for features in your javascript with:
+
+    if (Binflip.isActive('feature')) {
+      alert("Feature is active");
+    }
+
 Usage with Rollout
 ==================
 
