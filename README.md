@@ -77,7 +77,8 @@ Procfile
 Then in application setup / initialization:
 
     $redis = Redis.new
-    $toggle = Binflip.new($redis)
+    $rollout = Rollout.new($redis)
+    $toggle = Binflip.new($rollout)
 
 
 Check for toggles:

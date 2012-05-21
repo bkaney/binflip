@@ -1,26 +1,29 @@
 require 'set'
-require 'delegate'
 
 if defined?(Rails) && defined?(Rails::Engine)
   require 'binflip_rails'
 end
 
 class Binflip
+  @rollout = false
 
-  def self.rollout?
-    defined?(Rollout) == 'constant'
-  end
-
-  def initialize(redis=nil)
-    if Binflip.rollout?
-      @redis = redis
-      @source = SimpleDelegator.new(Rollout.new(redis))
+  def initialize(rollout=nil)
+    if rollout && rollout.is_a?(Rollout)
+      @rollout = rollout
     end
   end
 
+  def rollout?
+    !! @rollout
+  end
+  
+  def redis
+    @redis ||= @rollout.instance_variable_get(:@redis) if rollout?
+  end
+
   def active?(feature, user=nil)
-    if environment_active?(feature) && @source && user
-      @source.active?(feature, user)
+    if environment_active?(feature) && rollout? && user
+      @rollout.active?(feature, user)
     else
       environment_active?(feature)
     end
@@ -35,12 +38,12 @@ class Binflip
   end
 
   def activate_group(feature, group)
-    @source.activate_group(feature, group)
+    @rollout.activate_group(feature, group)
     feature_set_add(feature)
   end
 
   def activate_user(feature, user)
-    @source.activate_user(feature, user)
+    @rollout.activate_user(feature, user)
     feature_set_add(feature)
   end
 
@@ -52,8 +55,8 @@ class Binflip
   end
 
   def method_missing(meth, *args, &block)
-    if @source
-      @source.send(meth, *args, &block)
+    if rollout?
+      @rollout.send(meth, *args, &block)
       cleanup_feature_set! if (meth =~ /(:de)?activate/)
     else
       super
@@ -76,15 +79,15 @@ class Binflip
 
   
   def feature_set_purge
-    @redis.del(feature_set_key) if Binflip.rollout?
+    redis.del(feature_set_key) if rollout?
   end
 
   def feature_set_del(feature)
-    @redis.srem(feature_set_key, feature) if Binflip.rollout?
+    redis.srem(feature_set_key, feature) if rollout?
   end
 
   def feature_set_add(feature)
-    @redis.sadd(feature_set_key, feature) if Binflip.rollout?
+    redis.sadd(feature_set_key, feature) if rollout?
   end
 
   def feature_set_key
@@ -98,7 +101,7 @@ class Binflip
   end
   
   def features_rollout
-    @redis.smembers(feature_set_key).to_set
+    redis.smembers(feature_set_key).to_set
   end
 
   def features_environment

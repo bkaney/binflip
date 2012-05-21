@@ -13,8 +13,6 @@ describe Binflip do
   describe "without rollout" do
 
     before do
-      Binflip.stubs(:rollout?).returns(false)
-
       @binflip = Binflip.new
       ENV['FEATURE_X'] = "1"
       ENV['FEATURE_Y'] = "0"
@@ -34,11 +32,11 @@ describe Binflip do
 
     describe "with Rollout" do
       before do
-        Binflip.stubs(:rollout?).returns(true)
         Redis.new.flushdb
 
         @redis = Redis.new
-        @binflip = Binflip.new(@redis)
+        @rollout = Rollout.new(@redis)
+        @binflip = Binflip.new(@rollout)
         ENV['FEATURE_X'] = "1"
         ENV['FEATURE_Y'] = "0"
       end
@@ -53,7 +51,6 @@ describe Binflip do
       end
 
       it "must be false if the environment is false" do
-        binding.pry
         @binflip.activate_user(:x, stub(:id => 51))
         @binflip.active?(:y, stub(:id => 51)).must_equal false
       end
