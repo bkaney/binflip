@@ -19,7 +19,7 @@ Rationale
 
 When using a continuous delivery process, it is important to try to get all code integrated into the mainline as soon as possible.  Feature toggles are favored over feature branches (<http://www.infoq.com/interviews/jez-humble-martin-fowler-cd>, <http://martinfowler.com/bliki/FeatureToggle.html>, <http://fournines.wordpress.com/2011/11/20/feature-branches-vs-feature-toggles/>, and <http://blog.jayfields.com/2010/10/experience-report-feature-toggle-over.html>) during the dev process (to guard against incomplete features being deployed to production).  
 
-Twelve-factor tells us to keep app configuration setting in environment variables.  Hence this libaray adds a tiny bit of convention on how feature toggle env vars are spelled.
+Twelve-factor tells us to keep app configuration setting in environment variables.  Hence this library adds a tiny bit of convention on how feature toggle env vars are spelled.
 
 As the ultimate acceptance of a feature is the market response, this library has been designed to work with rollout.
 
